@@ -17,10 +17,47 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+
       - name: Run terraform-plan-changes-count
+        id: plan-changes
         uses: ./
         with:
-          plan-path: test/plan.json
+          plan-path: test/plan-report.zip
+
+      - name: Print plan.json
+        run: cat ${PLAN_JSON_PATH}
+        env:
+          PLAN_JSON_PATH: ${{ runner.temp }}/plan.json
+
+      - name: Test outputs
+        run: |
+          echo "CREATE_COUNT=${CREATE_COUNT}"
+          echo "UPDATE_COUNT=${UPDATE_COUNT}"
+          echo "DELETE_COUNT=${DELETE_COUNT}"
+          echo "TOTAL_COUNT=${TOTAL_COUNT}"
+
+          if [ ${CREATE_COUNT} != "1" ]; then
+            echo "Expected CREATE_COUNT is 1, but actual ${CREATE_COUNT}"
+            exit 1
+          fi
+          if [ ${UPDATE_COUNT} != "0" ]; then
+            echo "Expected UPDATE_COUNT is 0, but actual ${UPDATE_COUNT}"
+            exit 1
+          fi
+          if [ ${DELETE_COUNT} != "0" ]; then
+            echo "Expected DELETE_COUNT is 0, but actual ${DELETE_COUNT}"
+            exit 1
+          fi
+          if [ ${TOTAL_COUNT} != "1" ]; then
+            echo "Expected TOTAL_COUNT is 1, but actual ${TOTAL_COUNT}"
+            exit 1
+          fi
+        env:
+          CREATE_COUNT: ${{ steps.plan-changes.outputs.create }}
+          UPDATE_COUNT: ${{ steps.plan-changes.outputs.update }}
+          DELETE_COUNT: ${{ steps.plan-changes.outputs.delete }}
+          TOTAL_COUNT:  ${{ steps.plan-changes.outputs.total }}
 
       - name: Slack Notification (not success)
         uses: act10ns/slack@44541246747a30eb3102d87f7a4cc5471b0ffb7d # v2.1.0
