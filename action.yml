@@ -1,0 +1,29 @@
+name: terraform-plan-changes-count
+description: Action to count changes in `terraform plan`
+
+branding:
+  icon: hash
+  color: blue
+
+inputs:
+  plan-path:
+    description: |
+      Path to plan report path
+    required: true
+
+outputs:
+  create:
+    description: Count of create resources in plan-path
+  update:
+    description: Count of update resources in plan-path
+  delete:
+    description: Count of delete resources in plan-path
+  total:
+    description: Count of total resources in plan-path (same to create + update + delete)
+
+runs:
+  using: composite
+
+  steps:
+    # TODO: Impl
+    - run: date
