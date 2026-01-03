@@ -30,7 +30,7 @@ Following command are required to use this action.
 * `delete` : Count of delete resources in `plan-path`
 * `total` : Count of total resources in `plan-path` (same to `create` + `update` + `delete`)
 
-## Example
+## Example: Basic
 ```yml
 steps:
   - uses: hashicorp/setup-terraform@v3
@@ -54,6 +54,32 @@ steps:
       UPDATE_COUNT: ${{ steps.plan-changes.outputs.update }}
       DELETE_COUNT: ${{ steps.plan-changes.outputs.delete }}
       TOTAL_COUNT:  ${{ steps.plan-changes.outputs.total }}
+```
+
+## Example: Auto-merge Dependabot PR when there are no plan changes
+
+```yml
+jobs:
+  terraform:
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Run terraform-plan-changes-count
+        id: plan-changes
+        uses: sue445/terraform-plan-changes-count@v0
+        with:
+          plan-path: tfplan
+
+      - name: Auto-merge Dependabot PR when there are no plan changes
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --merge "$PR_URL"
+        if: github.event_name == 'pull_request' && steps.plan-changes.outputs.total == '0' && github.actor == 'dependabot[bot]'
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ## Original idea
