@@ -1,0 +1,60 @@
+name: terraform-plan-changes-count
+description: Action to count changes in `terraform plan`
+
+branding:
+  icon: hash
+  color: blue
+
+inputs:
+  plan-path:
+    description: |
+      Path to plan report path.
+      Pass same path as the one provided in `terraform plan -out`.
+    required: true
+  working-directory:
+    description: |
+      Working directory to running terraform command
+    required: false
+    default: ${{ github.workspace }}
+
+outputs:
+  create:
+    description: Count of create resources in plan-path
+    value: ${{ steps.set_output.outputs.create }}
+  update:
+    description: Count of update resources in plan-path
+    value: ${{ steps.set_output.outputs.update }}
+  delete:
+    description: Count of delete resources in plan-path
+    value: ${{ steps.set_output.outputs.delete }}
+  total:
+    description: Count of total resources in plan-path (same to create + update + delete)
+    value: ${{ steps.set_output.outputs.total }}
+
+runs:
+  using: composite
+
+  steps:
+    # c.f. https://docs.gitlab.com/user/infrastructure/iac/mr_integration/
+    - name: Parse plan report
+      run: |
+        shopt -s expand_aliases
+        alias convert_report="jq -r '([.resource_changes[]?.change.actions?]|flatten)|{\"create\":(map(select(.==\"create\"))|length),\"update\":(map(select(.==\"update\"))|length),\"delete\":(map(select(.==\"delete\"))|length)}'"
+        terraform show -json ${PLAN_PATH} | convert_report > ${PLAN_JSON_PATH}
+      shell: bash
+      env:
+        PLAN_PATH: ${{ inputs.plan-path }}
+        PLAN_JSON_PATH: ${{ runner.temp }}/plan.json
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Set output
+      id: set_output
+      run: |
+        total=$(cat ${PLAN_JSON_PATH} | jq 'to_entries | map(.value) | add')
+        echo "create=$(cat ${PLAN_JSON_PATH} | jq .create)" >> $GITHUB_OUTPUT
+        echo "update=$(cat ${PLAN_JSON_PATH} | jq .update)" >> $GITHUB_OUTPUT
+        echo "delete=$(cat ${PLAN_JSON_PATH} | jq .delete)" >> $GITHUB_OUTPUT
+        echo "total=${total}" >> $GITHUB_OUTPUT
+      shell: bash
+      env:
+        PLAN_JSON_PATH: ${{ runner.temp }}/plan.json
