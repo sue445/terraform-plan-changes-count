@@ -11,6 +11,11 @@ inputs:
       Path to plan report path.
       Pass same path as the one provided in `terraform plan -out`.
     required: true
+  working-directory:
+    description: |
+      Working directory to running terraform command
+    required: false
+    default: ${{ github.workspace }}
 
 outputs:
   create:
@@ -40,6 +45,7 @@ runs:
       env:
         PLAN_PATH: ${{ inputs.plan-path }}
         PLAN_JSON_PATH: ${{ runner.temp }}/plan.json
+      working-directory: ${{ inputs.working-directory }}
 
     - name: Set output
       id: set_output

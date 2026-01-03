@@ -27,7 +27,8 @@ jobs:
         id: plan-changes
         uses: ./
         with:
-          plan-path: test/plan-report.zip
+          plan-path: plan-report.zip
+          working-directory: test/
 
       - name: Print plan.json
         run: cat ${PLAN_JSON_PATH}
