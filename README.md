@@ -8,6 +8,7 @@ Action to count changes in `terraform plan`
 Following command are required to use this action.
 
 * `jq`
+  * Available by default if GitHub-hosted runner
 * `terraform`
   * e.g. https://github.com/hashicorp/setup-terraform
 
