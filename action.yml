@@ -11,6 +11,7 @@ inputs:
       Path to plan report file.
       Pass same path as the one provided in `terraform plan -out`.
     required: true
+
   working-directory:
     description: |
       Working directory to running terraform command
