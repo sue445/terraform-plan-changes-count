@@ -31,7 +31,7 @@ jobs:
           working-directory: test/
 
       - name: Print plan.json
-        run: cat ${PLAN_JSON_PATH}
+        run: cat "${PLAN_JSON_PATH}"
         env:
           PLAN_JSON_PATH: ${{ runner.temp }}/plan.json
 
@@ -42,19 +42,19 @@ jobs:
           echo "DELETE_COUNT=${DELETE_COUNT}"
           echo "TOTAL_COUNT=${TOTAL_COUNT}"
 
-          if [ ${CREATE_COUNT} != "1" ]; then
+          if [ "${CREATE_COUNT}" != "1" ]; then
             echo "Expected CREATE_COUNT is 1, but actual ${CREATE_COUNT}"
             exit 1
           fi
-          if [ ${UPDATE_COUNT} != "0" ]; then
+          if [ "${UPDATE_COUNT}" != "0" ]; then
             echo "Expected UPDATE_COUNT is 0, but actual ${UPDATE_COUNT}"
             exit 1
           fi
-          if [ ${DELETE_COUNT} != "0" ]; then
+          if [ "${DELETE_COUNT}" != "0" ]; then
             echo "Expected DELETE_COUNT is 0, but actual ${DELETE_COUNT}"
             exit 1
           fi
-          if [ ${TOTAL_COUNT} != "1" ]; then
+          if [ "${TOTAL_COUNT}" != "1" ]; then
             echo "Expected TOTAL_COUNT is 1, but actual ${TOTAL_COUNT}"
             exit 1
           fi
