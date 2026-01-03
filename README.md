@@ -1,6 +1,7 @@
 # terraform-plan-changes-count
 Action to count changes in `terraform plan`
 
+[![Latest Version](https://img.shields.io/github/v/release/sue445/terraform-plan-changes-count)](https://github.com/sue445/terraform-plan-changes-count/releases)
 [![test](https://github.com/sue445/terraform-plan-changes-count/actions/workflows/test.yml/badge.svg)](https://github.com/sue445/terraform-plan-changes-count/actions/workflows/test.yml)
 
 ## Requirements
