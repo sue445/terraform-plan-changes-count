@@ -67,7 +67,7 @@ jobs:
           TOTAL_COUNT:  ${{ steps.plan-changes.outputs.total }}
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@44541246747a30eb3102d87f7a4cc5471b0ffb7d # v2.1.0
+        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -86,7 +86,7 @@ jobs:
           level: warning
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@44541246747a30eb3102d87f7a4cc5471b0ffb7d # v2.1.0
+        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
