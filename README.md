@@ -34,6 +34,8 @@ Following command are required to use this action.
 ## Example: Basic
 ```yml
 steps:
+  - uses: actions/checkout@v7
+
   - uses: hashicorp/setup-terraform@v3
 
   - run: terraform plan -out=tfplan
@@ -67,6 +69,12 @@ jobs:
       pull-requests: write
 
     steps:
+      - uses: actions/checkout@v7
+
+      - uses: hashicorp/setup-terraform@v3
+  
+      - run: terraform plan -out=tfplan
+
       - name: Run terraform-plan-changes-count
         id: plan-changes
         uses: sue445/terraform-plan-changes-count@v0
