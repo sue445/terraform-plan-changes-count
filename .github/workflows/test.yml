@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
 
-      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+      - uses: hashicorp/setup-terraform@v4.0.1
         with:
           terraform_version: "1.14.3"
 
@@ -67,7 +67,7 @@ jobs:
           TOTAL_COUNT:  ${{ steps.plan-changes.outputs.total }}
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -77,16 +77,16 @@ jobs:
   actionlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
 
       - name: Run actionlint
-        uses: reviewdog/action-actionlint@48e36f54d8da326b83ab061aee2cc5e01b5ca46f # v1.80.6
+        uses: reviewdog/action-actionlint@v1.80.6
         with:
           fail_level: warning
           level: warning
 
       - name: Slack Notification (not success)
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2.2.0
+        uses: act10ns/slack@v2.2.0
         if: "! success()"
         continue-on-error: true
         with:
@@ -104,6 +104,6 @@ jobs:
 
     steps:
       - name: check dependent jobs
-        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35 # v1.3.0
+        uses: re-actors/alls-green@v1.3.0
         with:
           jobs: ${{ toJSON(needs) }}
